@@ -100,7 +100,7 @@ class ProviderConnection with ChangeNotifier {
     }
     listAllSignal = await accessC.getLevel(bssid, uuid);
     if (listAllSignal.isNotEmpty) {
-      obtainChartVelocity();
+      obtainChartIntensity();
     }
     notify();
   }
@@ -210,18 +210,19 @@ class ProviderConnection with ChangeNotifier {
   }
 
   // velocity
-  obtainChartVelocity() {
+  obtainChartIntensity() {
     listPoints = [];
+    listPointsAux = [];
     var nowBefore = DateTime.now();
     for (var e in listAllSignal.reversed) {
       level = e.signal;
-      obtainChartVelocityItem(nowBefore);
+      obtainChartIntensityItem(nowBefore);
       nowBefore = nowBefore.copyWith(second: nowBefore.second + 2);
       notify();
     }
   }
 
-  obtainChartVelocityItem(DateTime nowBefore) async {
+  obtainChartIntensityItem(DateTime nowBefore) async {
     //if conectado
 
     // var nowBefore = DateTime.now();

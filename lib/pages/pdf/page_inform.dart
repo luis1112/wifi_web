@@ -97,7 +97,7 @@ class _PageInformState extends State<PageInform> {
                     aspectRatio: 1.2,
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          right: 150.0, top: 20.0, left: 20.0),
+                          right: 20.0, top: 20.0, left: 20.0),
                       child: LineChart(itemChartChanel(pvC.lineBarsData)),
                     ),
                   ),

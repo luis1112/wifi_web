@@ -2,24 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:wifi_web/docs.dart';
 
 Widget itemExternalData(ExternalConnection? redInfo) {
-  return SizedBox(
-    width: double.infinity,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        ...getExternal2(redInfo),
-      ],
-    ),
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisAlignment: MainAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      ...getExternal1(redInfo),
+      const DividerC(),
+      ...getExternal2(redInfo),
+    ],
   );
 }
 
-List<Widget> getExternal1(ExternalConnection? redInfo, String? getTypeConnection) {
+List<Widget> getExternal1(ExternalConnection? redInfo) {
   ConnectionRedInfo? connection = redInfo?.connection;
   return [
-    if (getTypeConnection != null)
-      itemTextG("Tipo de conexión:", getTypeConnection),
     itemTextG("IP Pública:", redInfo?.ip ?? "---"),
     itemTextG("ISP:", connection?.isp ?? "---"),
     itemTextG("Dominio:", connection?.domain ?? "---"),

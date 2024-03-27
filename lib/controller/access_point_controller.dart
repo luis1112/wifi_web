@@ -48,7 +48,7 @@ class AccessPointController {
       var data = await subRef
           .where("uuid", isEqualTo: uuid)
           .orderBy("time", descending: true)
-          .limit(30)
+          .limit(20)
           .get();
       var docs = data.docs;
       var result = docs.map((e) {
@@ -76,7 +76,7 @@ class AccessPointController {
       var data = await subRef
           .where("uuid", isEqualTo: uuid)
           .orderBy("time", descending: true)
-          .limit(30)
+          .limit(20)
           .get();
       var docs = data.docs;
       var result = docs.map((e) {
