@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'dart:html' as html;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -257,7 +257,7 @@ Future<String?> generatePDF(
     // Save the PDF document to a file
     final Uint8List bytes = await pdf.save();
 
-    downloadPDF(bytes);
+    downloadPDF(bytes, dateTime);
     return "";
   } catch (er) {
     printC(er);
@@ -265,12 +265,18 @@ Future<String?> generatePDF(
   }
 }
 
-void downloadPDF(Uint8List bytes) {
+void downloadPDF(Uint8List bytes, DateTime dateTime) {
   // Convierte los datos de Uint8List a Blob
   var blob = uhtml.Blob([bytes]);
 
   // Crea un objeto URL a partir del Blob
   var url = uhtml.Url.createObjectUrlFromBlob(blob);
+
+  // Crea un enlace html para descargar el PDF
+  html.AnchorElement(href: url)
+    ..setAttribute("download",
+        "InformeWifi${UtilMethod.formatDateMonthHour(dateTime)}.pdf") // Nombre del archivo a descargar
+    ..click(); // Simula el clic en el enlace
 
   // Limpia la URL del objeto después de que se complete la descarga
   uhtml.Url.revokeObjectUrl(url);
