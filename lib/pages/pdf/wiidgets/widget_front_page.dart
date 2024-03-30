@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:pdf/widgets.dart';
 import 'package:wifi_web/docs.dart';
 
-Future<Widget> itemFrontPagePdf() async {
+Future<Widget> itemFrontPagePdf(DateTime dateTime) async {
   var widgetImage = await itemAssetsImagePdf(
     "assets/image/icon.png",
     height: 60.0,
@@ -25,7 +25,7 @@ Future<Widget> itemFrontPagePdf() async {
           ),
         ),
       ),
-      itemTextGPdf("FECHA:", DateFormat("yMd").format(DateTime.now())),
+      itemTextGPdf("FECHA Y HORA:", UtilMethod.formatDateMonthHour(dateTime)),
       Text(
         "LOJA - ECUADOR",
         style: const TextStyle(fontSize: 20.0),

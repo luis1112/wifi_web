@@ -9,7 +9,9 @@ UtilNavigator utilNavG = UtilNavigator();
 
 NavigatorState get navG => utilNavG.nav;
 
-BuildContext get contextG => utilNavG.context;
+BuildContext? contextPrincipal;
+
+BuildContext get contextG => contextPrincipal ?? utilNavG.context;
 
 void main() async {
   //vertical screen
@@ -60,16 +62,6 @@ class _MyAppState extends State<MyApp> {
         initialRoute: widget.route,
         routes: routes,
         onGenerateRoute: fluroRouter.generator,
-        // onGenerateRoute: (settings) {
-        //   // Extrae los argumentos de settings.arguments
-        //   if (settings.name == '/details') {
-        //     final args = settings.arguments as Map<String, dynamic>;
-        //     return MaterialPageRoute(
-        //       builder: (context) => DetailsScreen(data: args['data']),
-        //     );
-        //   }
-        //   return null;
-        // },
         themeMode: ThemeMode.dark,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(

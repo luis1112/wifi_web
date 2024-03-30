@@ -15,15 +15,17 @@ class _PagePrincipalState extends State<PagePrincipal> {
   List<ModelTab> listTabs = [];
   ProviderConnection pvC = ProviderConnection.of();
   ProviderLogin pvL = ProviderLogin.of();
+  ProviderFirebase pvF = ProviderFirebase.of();
   UserModel? user;
+
+  String get uuid => (pvF.device?.uuid ?? "").trim();
 
   @override
   void initState() {
     Future.delayed(Duration.zero, () async {
-      user = await UtilPreference.getUser();
+      user = await pvL.getUser;
       if (user != null) {
-        pvL.user = user!;
-        pvC.getDevices();
+        pvF.getDevices();
       } else {
         navG.pushNamedAndRemoveUntil(PageLogin.route, (route) => false);
       }
@@ -34,8 +36,10 @@ class _PagePrincipalState extends State<PagePrincipal> {
 
   @override
   Widget build(BuildContext context) {
-    pvL = ProviderLogin.of(context, true);
-    pvC = ProviderConnection.of(context, true);
+    contextPrincipal = context;
+    pvL = ProviderLogin.of(context);
+    pvC = ProviderConnection.of(context);
+    pvF = ProviderFirebase.of(context, true);
     if (user == null) return const PageLoad();
     return Scaffold(
       appBar: AppBar(
@@ -47,11 +51,11 @@ class _PagePrincipalState extends State<PagePrincipal> {
         width: MediaQuery.of(context).size.width,
         child: Column(
           children: [
-            const SizedBox(height: 30.0),
-            itemDevices(),
-            const SizedBox(height: 30.0),
-            if (pvC.uuid.trim().isNotEmpty)
-              Expanded(child: itemStreamBuilderConnections())
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: itemDevices(),
+            ),
+            if (uuid.isNotEmpty) Expanded(child: itemStreamBuilderConnections())
           ],
         ),
       ),
@@ -59,7 +63,7 @@ class _PagePrincipalState extends State<PagePrincipal> {
   }
 
   Widget itemDevices() {
-    if (pvC.listDevices.isEmpty) {
+    if (pvF.listDevices.isEmpty) {
       return const Center(child: Text('No hay dispositivos'));
     }
     return Column(
@@ -69,22 +73,15 @@ class _PagePrincipalState extends State<PagePrincipal> {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 10.0),
-        DropdownButton<DeviceModel?>(
-          value: pvC.device,
-          items: pvC.listDevices.map((DeviceModel? device) {
-            return DropdownMenuItem<DeviceModel?>(
-              value: device,
-              child:
-                  Text('${device?.brand} ${device?.model} (${device?.uuid})'),
-            );
-          }).toList(),
-          onChanged: (device) {
-            if (device == null) return;
-            if (pvC.device?.uuid == device.uuid) return;
-            pvC.device = device;
-            pvC.notify();
+        InputField<DeviceModel>(
+          listSelect: pvF.listDevices,
+          valueSelect: pvF.device,
+          builderSelect: (v) => '${v.brand} ${v.model} (${v.uuid})',
+          onChanged: (v) {
+            if (pvF.device?.uuid == v.uuid) return;
+            pvF.device = v;
+            pvF.notify();
           },
-          hint: const Text('Seleccione un dispositivo'),
         ),
       ],
     );
@@ -92,7 +89,7 @@ class _PagePrincipalState extends State<PagePrincipal> {
 
   Widget itemStreamBuilderConnections() {
     return StreamBuilder<QuerySnapshot>(
-      stream: fConnections.where("uuid", isEqualTo: pvC.uuid).snapshots(),
+      stream: fConnections.where("uuid", isEqualTo: uuid).snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: loadCenter());
@@ -115,25 +112,34 @@ class _PagePrincipalState extends State<PagePrincipal> {
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
-          child: ListRowC(
-            row: 2,
+          child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: List.generate(list.length, (index) {
               var e = list[index];
-              return Padding(
+              return Container(
                 padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  child: ListTile(
-                    onTap: () {
-                      navG.pushNamed(
-                        PageInfo.route,
-                        arguments: {
-                          "bssid": e.bssid,
-                          "uuid": e.uuid,
-                        },
-                      );
-                    },
-                    title: Text(e.ssid),
-                    subtitle: Text(e.bssid),
+                constraints: const BoxConstraints(maxWidth: 350.0),
+                child: InkWell(
+                  onTap: () {
+                    pvC.connection = e;
+                    navG.pushNamed(
+                      PageAnalysis.route,
+                      arguments: {
+                        "bssid": e.bssid,
+                        "uuid": e.uuid,
+                      },
+                    );
+                  },
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        children: [
+                          itemTextG("", e.ssid),
+                          itemTextG(e.bssid, ""),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               );

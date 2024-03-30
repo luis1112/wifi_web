@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
@@ -12,14 +11,6 @@ class ProviderConnection with ChangeNotifier {
   }
 
   notify() => notifyListeners();
-
-  //controllers
-  AccessPointController accessC = AccessPointController();
-  StreamSubscription? streamSubscription;
-
-  //devices
-  List<DeviceModel> listDevices = [];
-  DeviceModel? device;
 
   //test
   ModelTest? test;
@@ -50,59 +41,9 @@ class ProviderConnection with ChangeNotifier {
   List<FlSpot> listPoints = [];
   int level = 0;
 
-  //uuid
-  String get uuid => device?.uuid ?? "";
-
-  String get bssid => connection.bssid;
-
   reset() {
     nowAfterSignal = DateTime.now();
     nowAfterVelocity = DateTime.now();
-  }
-
-  getDevices() async {
-    device = null;
-    ProviderLogin pvL = ProviderLogin.of();
-    listDevices = await UserController().getDevicesByEmail(pvL.user.email);
-    if (listDevices.isNotEmpty) {
-      device = listDevices.first;
-      notify();
-    }
-  }
-
-  initListen(String bssid, String uuid) async {
-    streamSubscription?.cancel();
-    var id = accessC.getIdConnection(bssid, uuid);
-    streamSubscription = fConnections.doc(id).snapshots().listen((data) {
-      if (data.exists) {
-        printC("OBTENIENDO MAS INFORMACIÓN");
-        reset();
-        connection = ItemConnection.fromJson(
-          data.data() as Map<String, dynamic>,
-        );
-        initData();
-      } else {
-        connection = ItemConnection();
-      }
-      notify();
-    });
-  }
-
-  initData() async {
-    if (bssid.trim().isEmpty) return;
-    accessC.getExternalConnection(bssid, uuid).then((v) => external = v);
-    accessC.getTestConnection(bssid, uuid).then((v) => test = v);
-    accessPointsAll = await accessC.getAccessPoints(bssid, uuid);
-    accessPoints = accessPointsAll.firstOrNull?.list ?? [];
-    if (accessPointsAll.isNotEmpty) {
-      obtainChartChanel();
-      obtainChartSignal();
-    }
-    listAllSignal = await accessC.getLevel(bssid, uuid);
-    if (listAllSignal.isNotEmpty) {
-      obtainChartIntensity();
-    }
-    notify();
   }
 
   double calculateDistanceRouter(int rssi) {

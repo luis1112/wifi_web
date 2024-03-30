@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,12 @@ class ProviderLogin with ChangeNotifier {
   notify() => notifyListeners();
 
   UserModel user = UserModel.fromJson({});
+
+  Future<UserModel?> get getUser async {
+    var userAux = await UtilPreference.getUser();
+    if (userAux != null) user = userAux;
+    return userAux;
+  }
 
   Future<bool> loginWithGoogle() async {
     try {

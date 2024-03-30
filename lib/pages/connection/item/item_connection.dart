@@ -12,7 +12,7 @@ Widget itemConnection(ItemConnection? c) {
       itemTextG("Señal:", "${c?.signal} dBm"),
       itemTextG("Frecuencia:", c?.freq),
       itemTextG("Ancho de banda:", c?.chanelWidth),
-      itemTextG("Canal:", c?.chanel),
+      itemTextG("Canal:", c?.chanel.toString()),
       const DividerC(),
       itemTextG("Dirección IP:", c?.ipV4),
       itemTextG("Dirección IPV6:", c?.ipV6),

@@ -7,11 +7,33 @@ class AccessPointController {
     return "$bssid-$uuid";
   }
 
-  Future<ExternalConnection?> getExternalConnection(
-      String bssid, String uuid) async {
+  String getIdAnalysis(DateTime dateTime) {
+    return "${dateTime.millisecondsSinceEpoch}";
+  }
+
+  Future<ItemConnection?> getConnection(String bssid, String uuid) async {
     try {
       var id = getIdConnection(bssid, uuid);
-      var docRef = fConnections.doc(id);
+      var data = fConnections.doc(id);
+      var cData = await data.get();
+      if (cData.exists) {
+        return ItemConnection.fromJson(cData.data() as Map<String, dynamic>);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<ExternalConnection?> getExternalConnection(
+    String bssid,
+    String uuid,
+    DateTime dateTime,
+  ) async {
+    try {
+      var id = getIdConnection(bssid, uuid);
+      var idAnalysis = getIdAnalysis(dateTime);
+      var docRef = fAnalysis(id).doc(idAnalysis);
       var subRef = docRef.collection('external');
       var docs = (await subRef.get()).docs;
       var eData = docs.firstOrNull?.data();
@@ -24,10 +46,15 @@ class AccessPointController {
     }
   }
 
-  Future<ModelTest?> getTestConnection(String bssid, String uuid) async {
+  Future<ModelTest?> getTestConnection(
+    String bssid,
+    String uuid,
+    DateTime dateTime,
+  ) async {
     try {
       var id = getIdConnection(bssid, uuid);
-      var docRef = fConnections.doc(id);
+      var idAnalysis = getIdAnalysis(dateTime);
+      var docRef = fAnalysis(id).doc(idAnalysis);
       var subRef = docRef.collection('testConnection');
       var docs = (await subRef.get()).docs;
       var eData = docs.firstOrNull?.data();
@@ -40,10 +67,15 @@ class AccessPointController {
     }
   }
 
-  Future<List<AllSignalConnection>> getLevel(String bssid, String uuid) async {
+  Future<List<AllSignalConnection>> getLevel(
+    String bssid,
+    String uuid,
+    DateTime dateTime,
+  ) async {
     try {
       var id = getIdConnection(bssid, uuid);
-      var docRef = fConnections.doc(id);
+      var idAnalysis = getIdAnalysis(dateTime);
+      var docRef = fAnalysis(id).doc(idAnalysis);
       var subRef = docRef.collection('signals');
       var data = await subRef
           .where("uuid", isEqualTo: uuid)
@@ -68,10 +100,14 @@ class AccessPointController {
   }
 
   Future<List<AllAccessPoint>> getAccessPoints(
-      String bssid, String uuid) async {
+    String bssid,
+    String uuid,
+    DateTime dateTime,
+  ) async {
     try {
       var id = getIdConnection(bssid, uuid);
-      var docRef = fConnections.doc(id);
+      var idAnalysis = getIdAnalysis(dateTime);
+      var docRef = fAnalysis(id).doc(idAnalysis);
       var subRef = docRef.collection('accessPoints');
       var data = await subRef
           .where("uuid", isEqualTo: uuid)

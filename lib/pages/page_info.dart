@@ -15,19 +15,24 @@ class _PageInfoState extends State<PageInfo> {
   List<ModelTab> listTabs = [];
   ProviderConnection pvC = ProviderConnection.of();
   ProviderLogin pvL = ProviderLogin.of();
+  ProviderFirebase pvF = ProviderFirebase.of();
   UserModel? user;
+
+  //args
   String bssid = "";
   String uuid = "";
+  int time = 0;
 
-  bool get isCompleteInfo => bssid.trim().isNotEmpty && uuid.trim().isNotEmpty;
+  bool get isCompleteInfo =>
+      bssid.trim().isNotEmpty && uuid.trim().isNotEmpty && time != 0;
 
   @override
   void initState() {
     Future.delayed(Duration.zero, () async {
-      user = await UtilPreference.getUser();
+      user = await pvL.getUser;
       if (user != null && isCompleteInfo) {
-        pvL.user = user!;
-        pvC.initListen(bssid, uuid);
+        var dateTme = DateTime.fromMillisecondsSinceEpoch(time);
+        pvF.initListen(context, bssid, uuid, dateTme);
       } else {
         navG.pushNamedAndRemoveUntil(PagePrincipal.route, (route) => false);
       }
@@ -38,18 +43,20 @@ class _PageInfoState extends State<PageInfo> {
 
   @override
   void dispose() {
-    pvC.streamSubscription?.cancel();
+    pvF.streamSubscription?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    pvL = ProviderLogin.of(context, true);
+    pvL = ProviderLogin.of(context);
     pvC = ProviderConnection.of(context, true);
+    pvF = ProviderFirebase.of(context);
     var arg = ModalRoute.of(context)?.settings.arguments;
     if (arg is Map) {
       bssid = parseString(arg["bssid"]);
       uuid = parseString(arg["uuid"]);
+      time = parseInt(arg["time"]);
     }
     // bssid = widget.bssid;
     if (user == null) return const PageLoad();
@@ -78,7 +85,7 @@ class _PageInfoState extends State<PageInfo> {
               }
             },
           ),
-          title: const Text("WIFI"),
+          title: Text("${pvC.connection.ssid} - ${pvC.connection.bssid}"),
           backgroundColor: Colors.blueGrey[900],
           bottom: TabBar(
             isScrollable: true,

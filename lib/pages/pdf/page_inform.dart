@@ -1,10 +1,8 @@
-import 'dart:html' as html;
 import 'dart:typed_data';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:screenshot/screenshot.dart';
 import 'package:universal_html/html.dart' as uhtml;
@@ -51,6 +49,7 @@ class _PageInformState extends State<PageInform> {
             sSignal,
             pvC.lineBarsData,
             pvC.listSignal,
+            ProviderFirebase.of().dateTime,
           );
           onLoad(true);
           await getPathPdf(args);
@@ -148,7 +147,8 @@ class _PageInformState extends State<PageInform> {
               ),
             ),
           ),
-          itemTextG("FECHA:", DateFormat("yMd").format(DateTime.now())),
+          itemTextG("FECHA Y HORA:",
+              UtilMethod.formatDateMonthHour(ProviderFirebase.of().dateTime)),
           const Text(
             "LOJA - ECUADOR",
             style: TextStyle(fontSize: 20.0),
@@ -180,7 +180,8 @@ Future<String?> getPathPdf(
             ScreenshotController,
             ScreenshotController,
             List<ItemChartChanel>,
-            List<ItemChartSignal>>
+            List<ItemChartSignal>,
+            DateTime>
         args) async {
   ItemConnection connection = args.item1;
   ExternalConnection? redInfo = args.item2;
@@ -189,8 +190,9 @@ Future<String?> getPathPdf(
   ScreenshotController sSignal = args.item5;
   List<ItemChartChanel> lineBarsData = args.item6;
   List<ItemChartSignal> listSignal = args.item7;
+  DateTime dateTime = args.item8;
   return await generatePDF(connection, redInfo, sVelocity, sChanel, sSignal,
-      lineBarsData, listSignal);
+      lineBarsData, listSignal, dateTime);
 }
 
 Future<String?> generatePDF(
@@ -201,11 +203,12 @@ Future<String?> generatePDF(
   ScreenshotController sSignal,
   List<ItemChartChanel> lineBarsData,
   List<ItemChartSignal> listSignal,
+  DateTime dateTime,
 ) async {
   try {
     final pdf = pw.Document();
 
-    var widgetFrontPage = await itemFrontPagePdf();
+    var widgetFrontPage = await itemFrontPagePdf(dateTime);
 
     pdf.addPage(itemPagePdf(
       [widgetFrontPage],
@@ -269,17 +272,11 @@ void downloadPDF(Uint8List bytes) {
   // Crea un objeto URL a partir del Blob
   var url = uhtml.Url.createObjectUrlFromBlob(blob);
 
-  // Crea un enlace html para descargar el PDF
-  var anchor = html.AnchorElement(href: url)
-    ..setAttribute(
-        "download", "informe_wifi.pdf") // Nombre del archivo a descargar
-    ..click(); // Simula el clic en el enlace
-
   // Limpia la URL del objeto después de que se complete la descarga
   uhtml.Url.revokeObjectUrl(url);
 }
 
-class Tuple7<A, B, C, D, E, F, G> {
+class Tuple7<A, B, C, D, E, F, G, H> {
   final A item1;
   final B item2;
   final C item3;
@@ -287,7 +284,8 @@ class Tuple7<A, B, C, D, E, F, G> {
   final E item5;
   final F item6;
   final G item7;
+  final H item8;
 
   const Tuple7(this.item1, this.item2, this.item3, this.item4, this.item5,
-      this.item6, this.item7);
+      this.item6, this.item7, this.item8);
 }
