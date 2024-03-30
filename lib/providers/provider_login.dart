@@ -28,9 +28,9 @@ class ProviderLogin with ChangeNotifier {
 
   Future<bool> loginWithGoogle() async {
     try {
-      // var u = await googleSignIn.signIn();
-      // var email = u?.email ?? "";
-      var email = "jimmy.vicente@unl.edu.ec";
+      var u = await googleSignIn.signIn();
+      var email = u?.email ?? "";
+      // var email = "jimmy.vicente@unl.edu.ec";
       if (email.contains("@unl.edu.ec")) {
         var userData = await UserController().getUserByUuid(email);
         if (userData != null && userData.rol.contains("web")) {
