@@ -25,6 +25,7 @@ class _PagePrincipalState extends State<PagePrincipal> {
     Future.delayed(Duration.zero, () async {
       user = await pvL.getUser;
       if (user != null) {
+        await pvF.getUsers();
         pvF.getDevices();
       } else {
         navG.pushNamedAndRemoveUntil(PageLogin.route, (route) => false);
@@ -66,22 +67,34 @@ class _PagePrincipalState extends State<PagePrincipal> {
     if (pvF.listDevices.isEmpty) {
       return const Center(child: Text('No hay dispositivos'));
     }
-    return Column(
+    return Wrap(
       children: [
-        const Text(
-          "Conexiones registradas para el dispositivo: ",
-          textAlign: TextAlign.center,
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: InputField<UserModel>(
+            title: "Usuario: ",
+            listSelect: pvF.listUsers,
+            valueSelect: pvF.user,
+            builderSelect: (v) => '${v.email}',
+            onChanged: (v) {
+              pvF.user = v;
+              pvF.getDevices();
+            },
+          ),
         ),
-        const SizedBox(height: 10.0),
-        InputField<DeviceModel>(
-          listSelect: pvF.listDevices,
-          valueSelect: pvF.device,
-          builderSelect: (v) => '${v.brand} ${v.model} (${v.uuid})',
-          onChanged: (v) {
-            if (pvF.device?.uuid == v.uuid) return;
-            pvF.device = v;
-            pvF.notify();
-          },
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: InputField<DeviceModel>(
+            title: "Conexiones del dispositivo: ",
+            listSelect: pvF.listDevices,
+            valueSelect: pvF.device,
+            builderSelect: (v) => '${v.brand} ${v.model} (${v.uuid})',
+            onChanged: (v) {
+              if (pvF.device?.uuid == v.uuid) return;
+              pvF.device = v;
+              pvF.notify();
+            },
+          ),
         ),
       ],
     );

@@ -15,6 +15,19 @@ class UserController {
     }
   }
 
+  Future<List<UserModel>> getListUsers() async {
+    try {
+      var docs = (await fUsers.get()).docs;
+      var result = docs.map((e) {
+        var eData = e.data();
+        return UserModel.fromJson(eData);
+      }).toList();
+      return result;
+    } catch (e) {
+      return [];
+    }
+  }
+
   Future<List<DeviceModel>> getDevicesByEmail(String email) async {
     try {
       var docRef = fUsers.doc(email);

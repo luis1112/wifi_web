@@ -19,18 +19,25 @@ class ProviderFirebase with ChangeNotifier {
   StreamSubscription? streamSubscription;
 
   //devices
+  List<UserModel> listUsers = [];
   List<DeviceModel> listDevices = [];
   DeviceModel? device;
+  UserModel? user;
   DateTime dateTime = DateTime.now();
 
-  getDevices() async {
-    device = null;
+  getUsers() async {
+    user = null;
     ProviderLogin pvL = ProviderLogin.of();
-    listDevices = await UserController().getDevicesByEmail(pvL.user.email);
-    if (listDevices.isNotEmpty) {
-      device = listDevices.first;
-      notify();
-    }
+    listUsers = await UserController().getListUsers();
+    user = listUsers.where((e) => e.email == pvL.user.email).firstOrNull;
+  }
+
+  getDevices() async {
+    if (user == null) return;
+    device = null;
+    listDevices = await UserController().getDevicesByEmail(user?.email ?? "");
+    device = listDevices.firstOrNull;
+    notify();
   }
 
   initListen(BuildContext context, String bssid, String uuid,

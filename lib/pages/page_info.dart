@@ -29,7 +29,7 @@ class _PageInfoState extends State<PageInfo> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () async {
-      user = await pvL.getUser;
+      user = pvF.user;
       if (user != null && isCompleteInfo) {
         var dateTme = DateTime.fromMillisecondsSinceEpoch(time);
         pvF.initListen(context, bssid, uuid, dateTme);
