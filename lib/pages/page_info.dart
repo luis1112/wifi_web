@@ -25,6 +25,7 @@ class _PageInfoState extends State<PageInfo> {
 
   bool get isCompleteInfo =>
       bssid.trim().isNotEmpty && uuid.trim().isNotEmpty && time != 0;
+  int? indexSelect = 0;
 
   @override
   void initState() {
@@ -91,6 +92,10 @@ class _PageInfoState extends State<PageInfo> {
             isScrollable: true,
             indicatorColor: Colors.green,
             indicatorWeight: 3.0,
+            onTap: (i) {
+              indexSelect = i;
+              setState(() {});
+            },
             tabs: List.generate(listTabs.length, (index) {
               var item = listTabs[index];
               return Tab(
@@ -129,27 +134,25 @@ class _PageInfoState extends State<PageInfo> {
   }
 
   Widget? itemFloatingActionButton() {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: BtnC(
-        title: "Eliminar informe",
-        color: Colors.red,
-        colorBorderSide: Colors.red,
-        onTap: () {
-          alertMessage(context,
-              message: "¿Estás seguro de elimiar informe?\n"
-                  "Esta opción eliminará el documento para siempre",
-              titleBtnAgree: "Eliminar",
-              titleBtnCancel: "Cancelar", onTap: () async {
-            navG.pop();
-            var dateTime = DateTime.fromMillisecondsSinceEpoch(time);
-            await AccessPointController().deleteAnalysis(bssid, uuid, dateTime);
-            navG.pop();
-          }, onTapCancel: () {
-            navG.pop();
-          });
-        },
-      ),
+    if (indexSelect == listTabs.length - 1) return Container();
+    return BtnC(
+      title: "Eliminar informe",
+      color: Colors.red,
+      colorBorderSide: Colors.red,
+      onTap: () {
+        alertMessage(context,
+            message: "¿Estás seguro de elimiar informe?\n"
+                "Esta opción eliminará el documento para siempre",
+            titleBtnAgree: "Eliminar",
+            titleBtnCancel: "Cancelar", onTap: () async {
+          navG.pop();
+          var dateTime = DateTime.fromMillisecondsSinceEpoch(time);
+          await AccessPointController().deleteAnalysis(bssid, uuid, dateTime);
+          navG.pop();
+        }, onTapCancel: () {
+          navG.pop();
+        });
+      },
     );
   }
 }
