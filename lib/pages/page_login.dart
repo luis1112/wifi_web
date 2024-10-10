@@ -7,12 +7,12 @@ late final FirebaseApp app;
 Future<String> initSession() async {
   app = await Firebase.initializeApp(
     options: const FirebaseOptions(
-      apiKey: "AIzaSyB0KqV-XYskeA5ZEiIkyJ2o4huc5qVLJxE",
-      authDomain: "wifapp-55924.firebaseapp.com",
-      projectId: "wifapp-55924",
-      storageBucket: "wifapp-55924.appspot.com",
-      messagingSenderId: "729887046063",
-      appId: "1:729887046063:web:727090bfb664936b2d575a",
+      apiKey: "AIzaSyATiJrtV3HOxbIw7Y38B5dayGgOPpNLM8Y",
+      authDomain: "unl-analyzer.firebaseapp.com",
+      projectId: "unl-analyzer",
+      storageBucket: "unl-analyzer.appspot.com",
+      messagingSenderId: "1024721427599",
+      appId: "1:1024721427599:web:3ea967c98ee92250e3a4fa",
     ),
   );
   var user = await UtilPreference.getUser();

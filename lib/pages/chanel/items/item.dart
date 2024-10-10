@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:wifi_web/docs.dart';
 
 LineChartData itemChartChanel(List<ItemChartChanel> lineBarsData) {
-  bool isGhz2 = lineBarsData.where((e) => e.item.channelWidth <= 40).isNotEmpty;
   return LineChartData(
     gridData: const FlGridData(
       show: true,
@@ -11,12 +10,12 @@ LineChartData itemChartChanel(List<ItemChartChanel> lineBarsData) {
       horizontalInterval: 1,
       verticalInterval: 1,
     ),
-    titlesData: FlTitlesData(
+    titlesData: const FlTitlesData(
       show: true,
-      topTitles: const AxisTitles(
+      topTitles: AxisTitles(
         sideTitles: SideTitles(showTitles: false),
       ),
-      rightTitles: const AxisTitles(
+      rightTitles: AxisTitles(
         sideTitles: SideTitles(showTitles: false),
       ),
       bottomTitles: AxisTitles(
@@ -24,13 +23,10 @@ LineChartData itemChartChanel(List<ItemChartChanel> lineBarsData) {
           showTitles: true,
           reservedSize: 30,
           interval: 1,
-          getTitlesWidget: (value, meta) {
-            return bottomTitleWidgetsChanel(value, meta, isGhz2);
-          },
         ),
-        axisNameWidget: const Text("Ancho de banda"),
+        axisNameWidget: Text("Canales"),
       ),
-      leftTitles: const AxisTitles(
+      leftTitles: AxisTitles(
         sideTitles: SideTitles(
           showTitles: true,
           reservedSize: 30,
@@ -45,7 +41,7 @@ LineChartData itemChartChanel(List<ItemChartChanel> lineBarsData) {
     ),
     minX: 0,
     // maxX: 11,
-    maxX: isGhz2 ? 6 : 8,
+    maxX: 14,
     minY: 0,
     maxY: 7,
     lineTouchData: const LineTouchData(enabled: false),

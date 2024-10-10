@@ -122,6 +122,33 @@ class _PageInfoState extends State<PageInfo> {
             ),
           ],
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: itemFloatingActionButton(),
+      ),
+    );
+  }
+
+  Widget? itemFloatingActionButton() {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: BtnC(
+        title: "Eliminar informe",
+        color: Colors.red,
+        colorBorderSide: Colors.red,
+        onTap: () {
+          alertMessage(context,
+              message: "¿Estás seguro de elimiar informe?\n"
+                  "Esta opción eliminará el documento para siempre",
+              titleBtnAgree: "Eliminar",
+              titleBtnCancel: "Cancelar", onTap: () async {
+            navG.pop();
+            var dateTime = DateTime.fromMillisecondsSinceEpoch(time);
+            await AccessPointController().deleteAnalysis(bssid, uuid, dateTime);
+            navG.pop();
+          }, onTapCancel: () {
+            navG.pop();
+          });
+        },
       ),
     );
   }

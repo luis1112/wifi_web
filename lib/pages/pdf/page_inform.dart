@@ -41,7 +41,7 @@ class _PageInformState extends State<PageInform> {
       floatingActionButton: BtnC(
         title: "Exportar PDF",
         onTap: () async {
-          var args = Tuple7(
+          var args = Tuple9(
             pvC.connection,
             pvC.external,
             sVelocity,
@@ -50,6 +50,7 @@ class _PageInformState extends State<PageInform> {
             pvC.lineBarsData,
             pvC.listSignal,
             ProviderFirebase.of().dateTime,
+            pvC.test,
           );
           onLoad(true);
           await getPathPdf(args);
@@ -89,6 +90,8 @@ class _PageInformState extends State<PageInform> {
                     ),
                   ),
                 ),
+                itemTextTitle("Test de velocidad"),
+                itemTest(pvC.test),
                 itemTextTitle("Gráfica de canales"),
                 Screenshot(
                   controller: sChanel,
@@ -173,7 +176,7 @@ class _PageInformState extends State<PageInform> {
 }
 
 Future<String?> getPathPdf(
-    Tuple7<
+    Tuple9<
             ItemConnection,
             ExternalConnection?,
             ScreenshotController,
@@ -181,7 +184,8 @@ Future<String?> getPathPdf(
             ScreenshotController,
             List<ItemChartChanel>,
             List<ItemChartSignal>,
-            DateTime>
+            DateTime,
+            ModelTest?>
         args) async {
   ItemConnection connection = args.item1;
   ExternalConnection? redInfo = args.item2;
@@ -191,8 +195,9 @@ Future<String?> getPathPdf(
   List<ItemChartChanel> lineBarsData = args.item6;
   List<ItemChartSignal> listSignal = args.item7;
   DateTime dateTime = args.item8;
+  ModelTest? test = args.item9;
   return await generatePDF(connection, redInfo, sVelocity, sChanel, sSignal,
-      lineBarsData, listSignal, dateTime);
+      lineBarsData, listSignal, dateTime, test);
 }
 
 Future<String?> generatePDF(
@@ -204,6 +209,7 @@ Future<String?> generatePDF(
   List<ItemChartChanel> lineBarsData,
   List<ItemChartSignal> listSignal,
   DateTime dateTime,
+  ModelTest? test,
 ) async {
   try {
     final pdf = pw.Document();
@@ -232,6 +238,12 @@ Future<String?> generatePDF(
       ]));
     }
     var bChanel = await sChanel.capture();
+    if (test != null) {
+      pdf.addPage(itemPagePdf([
+        itemTextTitlePdf("Test de velocidad"),
+        itemTestPdf(test),
+      ]));
+    }
     if (bChanel != null) {
       pdf.addPage(itemPagePdf([
         itemTextTitlePdf("Gráfica de señal"),
@@ -282,7 +294,7 @@ void downloadPDF(Uint8List bytes, DateTime dateTime) {
   uhtml.Url.revokeObjectUrl(url);
 }
 
-class Tuple7<A, B, C, D, E, F, G, H> {
+class Tuple9<A, B, C, D, E, F, G, H, I> {
   final A item1;
   final B item2;
   final C item3;
@@ -291,7 +303,8 @@ class Tuple7<A, B, C, D, E, F, G, H> {
   final F item6;
   final G item7;
   final H item8;
+  final I item9;
 
-  const Tuple7(this.item1, this.item2, this.item3, this.item4, this.item5,
-      this.item6, this.item7, this.item8);
+  const Tuple9(this.item1, this.item2, this.item3, this.item4, this.item5,
+      this.item6, this.item7, this.item8, this.item9);
 }

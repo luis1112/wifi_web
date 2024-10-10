@@ -127,4 +127,20 @@ class AccessPointController {
       return [];
     }
   }
+
+  Future<bool> deleteAnalysis(
+      String bssid,
+      String uuid,
+      DateTime dateTime,
+      ) async {
+    try {
+      var id = getIdConnection(bssid, uuid);
+      var idAnalysis = getIdAnalysis(dateTime);
+      var docRef = fAnalysis(id).doc(idAnalysis);
+      await docRef.delete();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

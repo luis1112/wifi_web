@@ -9,30 +9,30 @@ LineChartBarData? listChartChanel(Color color, int chanel, int level) {
   var x = (5.3 * f) / 60;
   var lis20 = itemBarDataChanel([
     const FlSpot(1, 0),
-    FlSpot(1.5, x),
-    FlSpot(2.5, x),
-    const FlSpot(3, 0),
-  ], color);
-  if (chanel == 20) return lis20;
-  var lis40 = itemBarDataChanel([
-    const FlSpot(1, 0),
     FlSpot(2, x),
     FlSpot(4, x),
     const FlSpot(5, 0),
   ], color);
+  if (chanel == 20) return lis20;
+  var lis40 = itemBarDataChanel([
+    const FlSpot(2, 0),
+    FlSpot(3, x),
+    FlSpot(5.8, x),
+    const FlSpot(7, 0),
+  ], color);
   if (chanel == 40) return lis40;
   var lis80 = itemBarDataChanel([
-    const FlSpot(3, 0),
-    FlSpot(4, x),
-    FlSpot(6, x),
-    const FlSpot(7, 0),
+    const FlSpot(4, 0),
+    FlSpot(5, x),
+    FlSpot(7.8, x),
+    const FlSpot(9, 0),
   ], color);
   if (chanel == 80) return lis80;
   var lis160 = itemBarDataChanel([
-    const FlSpot(7, 0),
-    FlSpot(8, x),
-    FlSpot(10, x),
-    const FlSpot(11, 0),
+    const FlSpot(8, 0),
+    FlSpot(9, x),
+    FlSpot(11.8, x),
+    const FlSpot(13, 0),
   ], color);
   if (chanel == 80) return lis160;
   return null;
