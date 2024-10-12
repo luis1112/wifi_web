@@ -134,7 +134,7 @@ class _PageInformState extends State<PageInform> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            "assets/image/Icon-192.png",
+            "assets/image/logo_horizontal.png",
             height: 60.0,
           ),
           itemTextTitle("Universidad Nacional de Loja"),
