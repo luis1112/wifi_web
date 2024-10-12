@@ -128,11 +128,22 @@ class AccessPointController {
     }
   }
 
+  Future<bool> deleteConnection(String bssid, String uuid) async {
+    try {
+      var id = getIdConnection(bssid, uuid);
+      var doc = fConnections.doc(id);
+      await doc.delete();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<bool> deleteAnalysis(
-      String bssid,
-      String uuid,
-      DateTime dateTime,
-      ) async {
+    String bssid,
+    String uuid,
+    DateTime dateTime,
+  ) async {
     try {
       var id = getIdConnection(bssid, uuid);
       var idAnalysis = getIdAnalysis(dateTime);

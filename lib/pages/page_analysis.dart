@@ -82,6 +82,33 @@ class _PageAnalysisState extends State<PageAnalysis> {
           ],
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: itemFloatingActionButton(),
+    );
+  }
+
+  Widget? itemFloatingActionButton() {
+    return BtnC(
+      title: "Eliminar red",
+      color: Colors.red,
+      colorBorderSide: Colors.red,
+      onTap: () {
+        alertMessage(
+          context,
+          message: "¿Estás seguro de elimiar esta red WIFI?\n"
+              "Esta opción eliminará el registro para siempre",
+          titleBtnAgree: "Eliminar",
+          titleBtnCancel: "Cancelar",
+          onTap: () async {
+            navG.pop();
+            await AccessPointController().deleteConnection(bssid, uuid);
+            navG.pop();
+          },
+          onTapCancel: () {
+            navG.pop();
+          },
+        );
+      },
     );
   }
 
