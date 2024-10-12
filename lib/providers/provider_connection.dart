@@ -75,17 +75,13 @@ class ProviderConnection with ChangeNotifier {
     }).toList();
     List<ItemChartChanel> listAux = [];
     for (var e in access) {
-      var chanel = e.channelWidth;
-      // var chanel =
-      // int.parse("${e.channelWidth.name ??20}".replaceAll("mhz", ""));
+      var chanel = e.chanel;
       var color = generateUniqueRandomColor(
         listAux.map((e) => e.color).toList(),
         access.indexOf(e),
         e.level,
       );
-      // var eAux = lineBarsData.where((i) => i.item.ssid == e.ssid).firstOrNull;
-      // color = eAux?.color ?? color;
-      var item = listChartChanel(color, chanel, e.level);
+      var item = listChartChanel(color, chanel, e.level, typeChanel);
       if (item != null) {
         listAux.add(ItemChartChanel(e, item, color));
       }

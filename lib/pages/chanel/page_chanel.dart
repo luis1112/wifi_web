@@ -81,7 +81,7 @@ class _PageChanelState extends State<PageChanel> {
                     width: getWidthGraph(context),
                     child: Padding(
                       padding: const EdgeInsets.all(50.0),
-                      child: LineChart(itemChartChanel(pvC.lineBarsData)),
+                      child: LineChart(itemChartChanel(pvC.lineBarsData, pvC.typeChanel)),
                     ),
                   ),
                   if (pvC.isActiveNetwork)

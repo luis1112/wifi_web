@@ -9,8 +9,8 @@ Widget itemConnection(ItemConnection? c) {
     children: [
       itemTextG("SSID:", c?.ssid),
       itemTextG("MAC:", c?.bssid),
-      itemTextG("Señal:", "${c?.signal} dBm"),
-      itemTextG("Frecuencia:", c?.freq),
+      itemTextG("Rssi:", "${c?.signal} dBm"),
+      itemTextG("Banda de frecuencia:", c?.freq),
       itemTextG("Ancho de banda:", c?.chanelWidth),
       itemTextG("Canal:", c?.chanel.toString()),
       const DividerC(),
