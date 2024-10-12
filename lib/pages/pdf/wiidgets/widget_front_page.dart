@@ -4,7 +4,7 @@ import 'package:wifi_web/docs.dart';
 
 Future<Widget> itemFrontPagePdf(DateTime dateTime) async {
   var widgetImage = await itemAssetsImagePdf(
-    "assets/image/icon.png",
+    "assets/image/Icon-192.png",
     height: 60.0,
     width: 60.0,
   );
