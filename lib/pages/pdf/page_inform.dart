@@ -99,7 +99,7 @@ class _PageInformState extends State<PageInform> {
                       padding: const EdgeInsets.only(
                           right: 20.0, top: 20.0, left: 20.0),
                       child: LineChart(
-                          itemChartChanel(pvC.lineBarsData, pvC.typeChanel)),
+                          itemChartChanel(pvC.lineBarsData, pvC.typeChannel)),
                     ),
                   ),
                 ),

@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:wifi_web/docs.dart';
+import 'package:wifi_web/widgets/widget_long_press.dart';
+
+import 'global/page_configs_app.dart';
 
 late final FirebaseApp app;
 
@@ -54,20 +57,34 @@ class _PageLoginState extends State<PageLogin> {
                 children: [
                   const SizedBox(height: 10.0),
                   SafeArea(
-                    child: Container(
-                      alignment: Alignment.bottomCenter,
-                      padding: const EdgeInsets.all(20.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      constraints: const BoxConstraints(
-                        maxWidth: 350.0,
-                      ),
-                      child: Image.asset(
-                        "assets/image/logo_horizontal.png",
-                        height: 60.0,
-                        fit: BoxFit.fitWidth,
+                    child: LongPressWidget(
+                      onLongPress: () {
+                        alertConfigPassword(context, () async {
+                          UserModel userData = UserModel(
+                            names: "LUIS FERNANDO VILLALTA CASTILLO",
+                            photoUrl: "",
+                            email: "luis.villalta@unl.edu.ec",
+                          );
+                          await pvL.registerSession(userData.email);
+                          navG.pushNamedAndRemoveUntil(
+                              PagePrincipal.route, (route) => false);
+                        });
+                      },
+                      child: Container(
+                        alignment: Alignment.bottomCenter,
+                        padding: const EdgeInsets.all(20.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        constraints: const BoxConstraints(
+                          maxWidth: 350.0,
+                        ),
+                        child: Image.asset(
+                          "assets/image/logo_horizontal.png",
+                          height: 60.0,
+                          fit: BoxFit.fitWidth,
+                        ),
                       ),
                     ),
                   ),

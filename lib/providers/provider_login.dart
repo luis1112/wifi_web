@@ -31,17 +31,7 @@ class ProviderLogin with ChangeNotifier {
       var email = u?.email ?? "";
       // var email = "jimmy.vicente@unl.edu.ec";
       if (email.contains("@unl.edu.ec")) {
-        var userData = await UserController().getUserByUuid(email);
-        if (userData != null && userData.rol.contains("web")) {
-          UtilPreference.setUser(userData);
-          return true;
-        } else {
-          pvG.showMessage(
-              "Este usuario no esta autorizado para utilizar la pagina web",
-              onTap: () {
-            utilNavG.popUntilName(PageLogin.route);
-          });
-        }
+        registerSession(email);
       } else {
         await googleSignIn.signOut();
         pvG.showMessage(
@@ -57,6 +47,20 @@ class ProviderLogin with ChangeNotifier {
     }
     notify();
     return false;
+  }
+
+  registerSession(String email) async {
+    var userData = await UserController().getUserByUuid(email);
+    if (userData != null && userData.rol.contains("web")) {
+      UtilPreference.setUser(userData);
+      return true;
+    } else {
+      pvG.showMessage(
+          "Este usuario no esta autorizado para utilizar la pagina web",
+          onTap: () {
+        utilNavG.popUntilName(PageLogin.route);
+      });
+    }
   }
 
   navigatorExit() {

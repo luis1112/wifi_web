@@ -25,7 +25,7 @@ class ProviderConnection with ChangeNotifier {
 
   //chanel
   bool isActiveNetwork = false;
-  TypeChanel? typeChanel;
+  TypeChanel? typeChannel;
   List<ItemChartChanel> lineBarsData = [];
 
   //signal
@@ -63,25 +63,26 @@ class ProviderConnection with ChangeNotifier {
     return null;
   }
 
-  obtainChartChanel() {
+  obtainChartChanel() async {
     var access = accessPoints.where((e) {
       return e.ssid.trim().isNotEmpty;
     }).toList();
     access = access.where((e) {
-      if (e.frequency < 5000 && typeChanel == TypeChanel.ghz2) return true;
-      if (e.frequency >= 5000 && typeChanel == TypeChanel.ghz5) return true;
-      if (typeChanel == null) return true;
+      if (e.frequency < 5000 && typeChannel == TypeChanel.ghz2) return true;
+      if (e.frequency >= 5000 && typeChannel == TypeChanel.ghz5) return true;
+      if (typeChannel == null) return true;
       return false;
     }).toList();
     List<ItemChartChanel> listAux = [];
     for (var e in access) {
-      var chanel = e.chanel;
+      var channel = calculateChannel(e.frequency, true);
       var color = generateUniqueRandomColor(
         listAux.map((e) => e.color).toList(),
         access.indexOf(e),
         e.level,
       );
-      var item = listChartChanel(color, chanel, e.level, typeChanel);
+      var item =
+          listChartChanel(color, channel, e.level, e.channelWidth, typeChannel);
       if (item != null) {
         listAux.add(ItemChartChanel(e, item, color));
       }
@@ -180,5 +181,15 @@ class ProviderConnection with ChangeNotifier {
       var diffAux = nowBefore.difference(datePoint).inSeconds;
       listPoints.add(FlSpot(diffAux + 0.0, point.y));
     }
+  }
+
+  int calculateChannel(int frequency, bool isOther) {
+    if (frequency >= 2412 && frequency <= 2484) {
+      var item = isOther ? 3 : 1;
+      return ((frequency - 2412) ~/ 5 + item).toInt();
+    } else if (frequency >= 5180 && frequency <= 5825) {
+      return (((frequency - 5180) ~/ 5) + 36).toInt();
+    }
+    return 0;
   }
 }
