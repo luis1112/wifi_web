@@ -280,13 +280,13 @@ LineChartBarData itemBarDataChanel(List<FlSpot> list, Color color) {
     spots: list,
     isCurved: true,
     gradient: LinearGradient(colors: colors),
-    barWidth: 1,
+    barWidth: 1.8,
     isStrokeCapRound: true,
     dotData: const FlDotData(show: false),
     belowBarData: BarAreaData(
       show: true,
       gradient: LinearGradient(
-        colors: colors.map((color) => color.withOpacity(0.15)).toList(),
+        colors: colors.map((color) => color.withOpacity(0.08)).toList(),
       ),
     ),
   );
